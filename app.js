@@ -4,16 +4,20 @@ const multer = require('multer');
 const path = require('path');
 const app = express();
 
-// --- CONFIGURATION ---
-app.set('view engine', 'ejs');
-app.use(express.static('public'));
-app.use('/uploads', express.static('uploads'));
-// Middleware to parse form data
+// --- 1. MIDDLEWARE SETUP ---
+// This fixes the "req.body is undefined" error
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// DATABASE CONNECTION
-// Note: On Render, you'll eventually need a cloud DB like Aiven or PlanetScale
+// Set EJS as the engine
+app.set('view engine', 'ejs');
+
+// Static folders for CSS, Images, and Uploads
+app.use(express.static('public'));
+app.use('/uploads', express.static('uploads'));
+
+// --- 2. DATABASE CONNECTION ---
+// When you move to a cloud DB (Aiven/Tidb), you will update these values
 const db = mysql.createConnection({
     host: process.env.DB_HOST || '127.0.0.1',
     user: process.env.DB_USER || 'root',
@@ -21,7 +25,15 @@ const db = mysql.createConnection({
     database: process.env.DB_NAME || 'cnewshub_db'
 });
 
-// Multer for Images
+db.connect((err) => {
+    if (err) {
+        console.error('Database connection failed: ' + err.stack);
+        return;
+    }
+    console.log('Connected to MySQL database.');
+});
+
+// --- 3. IMAGE UPLOAD SETUP (MULTER) ---
 const storage = multer.diskStorage({
     destination: './uploads/',
     filename: (req, file, cb) => {
@@ -30,35 +42,41 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage: storage });
 
-// --- ROUTES ---
+// --- 4. ROUTES ---
+
+// Home Page - Displays all stories
 app.get('/', (req, res) => {
     db.query('SELECT * FROM news_posts ORDER BY created_at DESC', (err, results) => {
         if (err) throw err;
-        // We pass "articles" (plural) to the index page
+        // Pass the results as 'articles' to index.ejs
         res.render('index', { articles: results });
     });
 });
 
-// Ensure 'upload.single' comes before the (req, res) function
-app.post('/admin/publish', upload.single('news_image'), (req, res) => {
-    // Now req.body will NOT be undefined
-    const { title, category, content } = req.body; 
-    // ... rest of your code
+// Submit/Admin Page
+app.get('/submit', (req, res) => {
+    res.render('submit'); 
 });
+
+// Publish Route - Fixes the "title is not defined" ReferenceError
+app.post('/admin/publish', upload.single('news_image'), (req, res) => {
+    // Variables must be defined INSIDE this function block
+    const { title, category, content } = req.body; 
+    const img = req.file ? '/uploads/' + req.file.filename : '/uploads/default.jpg';
     
-    db.query('INSERT INTO news_posts (title, category, image_url, content) VALUES (?, ?, ?, ?)', 
-    [title, category, img, content], (err) => {
+    const sql = 'INSERT INTO news_posts (title, category, image_url, content) VALUES (?, ?, ?, ?)';
+    db.query(sql, [title, category, img, content], (err) => {
         if (err) {
-            console.log(err);
-            return res.send("Error saving post");
+            console.error(err);
+            return res.status(500).send("Internal Server Error: Could not save post.");
         }
         res.redirect('/');
     });
-
-app.get('/submit', (req, res) => {
-    res.render('submit'); // Ensure you have a submit.ejs file in your views folder
 });
 
-// RENDER PORT FIX
+// --- 5. RENDER PORT CONFIGURATION ---
+// Render looks for process.env.PORT. If not found, it defaults to 3000.
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => {
+    console.log(`🚀 CNEWS HUB is live at http://localhost:${PORT}`);
+});
