@@ -1,0 +1,24 @@
+<%- include('partials/header') %>
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= article.title %> | CNEWS HUB</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container"><a href="/"><img src="/logo.jpg" class="site-logo"></a></div>
+    </header>
+    <div class="container" style="max-width: 800px; padding: 50px 20px;">
+        <span class="badge"><%= article.category %></span>
+        <h1 style="font-size: 40px; line-height: 1.1; margin: 20px 0;"><%= article.title %></h1>
+        <img src="<%= article.image_url %>" style="width: 100%; border-radius: 8px; margin-bottom: 30px;">
+        <div style="font-size: 18px; line-height: 1.8; color: #444; white-space: pre-wrap;">
+            <%= article.content %>
+        </div>
+        <hr style="margin: 40px 0; border: 0; border-top: 1px solid #ddd;">
+        <a href="/" style="color: var(--gold); font-weight: bold; text-decoration: none;">&larr; Back to Home</a>
+    </div>
+</body>
+</html>
+<%- include('partials/footer') %>

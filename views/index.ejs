@@ -1,0 +1,103 @@
+<%- include('partials/header') %>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CNEWS HUB | News</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="container flex-header">
+            <a href="/"><img src="/logo.jpg" class="site-logo" alt="CNews Hub"></a>
+            CNEWS HUB
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/">NEWS</a></li>
+                    <li><a href="/politics">POLITICS</a></li>
+                    <li><a href="/business">BUSINESS</a></li>
+                    <li><a href="/sports">SPORTS</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <h2 style="border-left: 5px solid var(--gold); padding-left: 15px; margin-top: 40px;">LATEST STORIES</h2>
+        <div class="news-grid">
+            <% articles.forEach(article => { %>
+    <div class="news-card">
+        <img src="<%= article.image_url %>" alt="News Image">
+        <h2><%= article.title %></h2>
+    </div>
+<% }) %>
+        </div>
+    </div>
+
+ <footer class="site-footer">
+    <div class="container">
+        <div class="footer-top">
+            <div class="footer-brand-section">
+                <img src="/logo.jpg" class="footer-logo" alt="CNEWS HUB">
+                <p class="mission-text">
+                    <strong>CNEWS.name.ng</strong> is an outstanding, groundbreaking news website that encourages citizen journalists to report ongoing corruption and government malfeasance in Africa. Using photos, text, and video dynamically, the site informs and prompts concerned African citizens and activists globally to act, denouncing officially-sanctioned corruption, the material impoverishment of its citizenry, defilement of the environment, and the callous disregard of the democratic principles enshrined in the constitution.
+                </p>
+                <div class="social-connect">
+                    <span>Connect with us:</span>
+                    <a href="#">FB</a> <a href="#">TW</a> <a href="#">IG</a> <a href="#">YT</a>
+                </div>
+            </div>
+        </div>
+
+        <hr class="footer-divider">
+
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>QUICK LINKS</h4>
+                <ul>
+                    <li><a href="/about">About</a></li>
+                    <li><a href="/support">Support Us</a></li>
+                    <li><a href="/advertise">Advertise</a></li>
+                    <li><a href="/rss">RSS Feeds</a></li>
+                    <li><a href="/submit">Submit A Story</a></li>
+                </ul>
+            </div>
+
+            <div class="footer-col">
+                <h4>SECTIONS</h4>
+                <div class="dual-list">
+                    <ul>
+                        <li><a href="/news">News</a></li>
+                        <li><a href="/reports">Reports</a></li>
+                        <li><a href="/opinion">Opinion</a></li>
+                        <li><a href="/politics">Politics</a></li>
+                        <li><a href="/business">Business</a></li>
+                    </ul>
+                    <ul>
+                        <li><a href="/sports">Sports</a></li>
+                        <li><a href="/entertainment">Entertainment</a></li>
+                        <li><a href="/lifestyle">Lifestyle</a></li>
+                        <li><a href="/education">Education</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-col">
+                <h4>MEDIA</h4>
+                <ul>
+                    <li><a href="/videos">Videos</a></li>
+                    <li><a href="/photos">Photos</a></li>
+                    <li><a href="/documents">Documents</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <span class="current-date"><%= new Date().toDateString() %></span>
+            <p>© 2026 CNEWS HUB. All Rights Reserved.</p>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
+<%- include('partials/footer') %>

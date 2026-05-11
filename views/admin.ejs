@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CNEWS HUB Admin</title>
+    <style>
+        body { font-family: sans-serif; background: #eee; padding: 40px; }
+        .form-box { background: #fff; max-width: 500px; margin: auto; padding: 30px; border-top: 5px solid gold; border-radius: 5px; }
+        input, textarea, select { width: 100%; padding: 10px; margin: 10px 0; box-sizing: border-box; }
+        button { background: #111; color: gold; border: none; padding: 15px; width: 100%; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <div class="form-box">
+        <h2>Publish Story</h2>
+        <form action="/admin/publish" method="POST" enctype="multipart/form-data">
+            <input type="text" name="title" placeholder="Headline" required>
+            <select name="category">
+                <option>Politics</option>
+                <option>Tech</option>
+                <option>Metro</option>
+            </select>
+            <input type="file" name="news_image" required>
+            <textarea name="content" rows="8" placeholder="Story content..."></textarea>
+            <button type="submit">POST ARTICLE</button>
+        </form>
+    </div>
+</body>
+</html>
