@@ -18,19 +18,18 @@ app.use('/uploads', express.static('uploads'));
 
 // --- 2. DATABASE CONNECTION ---
 // When you move to a cloud DB (Aiven/Tidb), you will update these values
-const db = mysql.createConnection({
-    host: process.env.DB_HOST || '127.0.0.1',
-    user: process.env.DB_USER || 'root',
-    password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'cnewshub_db'
-});
-
-db.connect((err) => {
-    if (err) {
-        console.error('Database connection failed: ' + err.stack);
-        return;
-    }
-    console.log('Connected to MySQL database.');
+const connection = mysql.createConnection({
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  port: process.env.DB_PORT,
+  // ADD THIS LINE BELOW
+  allowPublicKeyRetrieval: true,
+  // It is also good practice to add this for MySQL 8+
+  authPlugins: {
+    mysql_clear_password: () => Buffer.from(process.env.DB_PASSWORD + '\0')
+  }
 });
 
 // --- 3. IMAGE UPLOAD SETUP (MULTER) ---
