@@ -19,14 +19,13 @@ app.use('/uploads', express.static('uploads'));
 // --- 2. DATABASE CONNECTION ---
 // When you move to a cloud DB (Aiven/Tidb), you will update these values
 
-// Change "connection" to "db" right here
 const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
-  allowPublicKeyRetrieval: true, // <--- CHECK THIS LINE! Make sure this comma is here
+  allowPublicKeyRetrieval: true,
   authPlugins: {
     mysql_clear_password: () => Buffer.from(process.env.DB_PASSWORD + '\0')
   }
