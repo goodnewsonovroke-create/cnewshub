@@ -18,7 +18,6 @@ app.use('/uploads', express.static('uploads'));
 
 // --- 2. DATABASE CONNECTION ---
 // When you move to a cloud DB (Aiven/Tidb), you will update these values
-const mysql = require('mysql2');
 
 // Change "connection" to "db" right here
 const db = mysql.createConnection({
