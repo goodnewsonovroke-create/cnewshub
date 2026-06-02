@@ -18,12 +18,20 @@ app.use('/uploads', express.static('uploads'));
 
 // --- 2. DATABASE CONNECTION ---
 // When you move to a cloud DB (Aiven/Tidb), you will update these values
-const connection = mysql.createConnection({
+const mysql = require('mysql2');
+
+// Change "connection" to "db" right here
+const db = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
   port: process.env.DB_PORT,
+  allowPublicKeyRetrieval: true,
+  authPlugins: {
+    mysql_clear_password: () => Buffer.from(process.env.DB_PASSWORD + '\0')
+  }
+});
   // ADD THIS LINE BELOW
   allowPublicKeyRetrieval: true,
   // It is also good practice to add this for MySQL 8+
@@ -76,6 +84,6 @@ app.post('/admin/publish', upload.single('news_image'), (req, res) => {
 // --- 5. RENDER PORT CONFIGURATION ---
 // Render looks for process.env.PORT. If not found, it defaults to 3000.
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`🚀 CNEWS HUB is live at http://localhost:${PORT}`);
+app.listen(PORT, '0.0.0.0', () => {
+    console.log(`CNewsHub is running on port ${PORT}`);
 });
